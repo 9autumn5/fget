@@ -1,0 +1,2 @@
+wordSet = set(['"'])
+print(wordSet)

@@ -1,0 +1,11 @@
+__pycache__/
+*.py[cod]
+*.swp
+utils/__pycache__/
+data/corpus/*
+data/wiki_modified/*
+data/glove*
+unfinished/*
+E:/PycharmProjects/biye/NFETC2018/data/glove.840B.300d
+E:/PycharmProjects/biye/FETC2018/data/corpus/
+E:/PycharmProjects/biye/NFETCCLSC2019/data/

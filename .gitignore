@@ -1,0 +1,13 @@
+/NFETC2018/data/glove.840B.300d.txt
+__pycache__/
+*.py[cod]
+*.swp
+utils/__pycache__/
+data/corpus/*
+data/wiki_modified/*
+data/glove*
+unfinished/*
+/NFETC2018/data/glove.840B.300d
+/FETC2018/data/corpus/
+/NFETCCLSC2019/data/
+/z-codes/
