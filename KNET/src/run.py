@@ -6,7 +6,6 @@ from KNET.src import util
 import tensorflow as tf
 
 
-
 ####### parse arguments
 
 parser = argparse.ArgumentParser()
@@ -119,7 +118,7 @@ elif training:
     util.printlog("Begin training")
 
     for i in range(iter_num):
-
+        #  最开始为0，进入
         if i%check_freq==0:
             util.printlog("Validating after running "+str(i*batch_size/train_size)+" epoches")
             util.test(w2v, model, valid_entity, valid_context, valid_label, valid_fbid, \

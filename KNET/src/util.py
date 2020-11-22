@@ -124,7 +124,7 @@ def test(w2v, model, _entity, _context, _label, _fbid, _embedding, \
 
     precision = true_pos / false_pos
     recall = true_pos / true_neg
-    print(version)
+    print(version)  #all
     print('strict: %f' %(strict/effect))
     print('loose-macro (precision recall f1): %f %f %f' \
         %(lma_p/effect, lma_r/effect, (2*lma_p*lma_r)/(lma_p+lma_r)/effect))

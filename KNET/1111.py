@@ -1,2 +1,0 @@
-wordSet = set(['"'])
-print(wordSet)
