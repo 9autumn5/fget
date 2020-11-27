@@ -1,7 +1,7 @@
 import numpy as np
 import json
-import config
-from utils import datautils
+from IFETEL2019 import config
+from IFETEL2019.utils import datautils
 
 
 def gen_training_data_from_wiki(typed_mentions_file, sents_file, word_vecs_pkl, sample_rate,

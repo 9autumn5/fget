@@ -2,7 +2,7 @@ import torch
 from torch import nn
 import torch.nn.functional as F
 import numpy as np
-from models import modelutils
+from IFETEL2019.models import modelutils
 
 
 def inference_labels_full(l1_type_indices, child_type_vecs, scores, extra_label_thres=0.5):

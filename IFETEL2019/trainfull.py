@@ -3,11 +3,11 @@ import torch
 import numpy as np
 import os
 import logging
-from utils.loggingutils import init_universal_logging
-from models import fetentvecutils
-from modelexp import fetelexp, exputils
-from el import simpleel
-import config
+from IFETEL2019.utils.loggingutils import init_universal_logging
+from IFETEL2019.models import fetentvecutils
+from IFETEL2019.modelexp import fetelexp, exputils
+from IFETEL2019.el import simpleel
+from IFETEL2019 import config
 
 
 def train_model():

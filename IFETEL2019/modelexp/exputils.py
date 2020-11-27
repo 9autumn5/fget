@@ -4,8 +4,8 @@ from torch import nn
 import numpy as np
 from typing import List
 import random
-from utils import utils, datautils
-import config
+from IFETEL2019.utils import utils, datautils
+from IFETEL2019 import config
 
 
 class ModelSample:

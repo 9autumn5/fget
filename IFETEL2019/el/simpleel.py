@@ -1,4 +1,4 @@
-from el import elutils
+from IFETEL2019.el import elutils
 
 
 def get_linked_cnts(name_entity_cnt_list_tup):

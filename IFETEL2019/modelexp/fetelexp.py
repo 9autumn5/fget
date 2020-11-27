@@ -2,12 +2,12 @@ import torch
 import numpy as np
 import time
 from typing import List
-from models.feteldeep import FETELStack
-from models.fetentvecutils import ELDirectEntityVec
-from modelexp import exputils
-from modelexp.exputils import ModelSample, anchor_samples_to_model_samples, model_samples_from_json
+from IFETEL2019.models.feteldeep import FETELStack
+from IFETEL2019.models.fetentvecutils import ELDirectEntityVec
+from IFETEL2019.modelexp import exputils
+from IFETEL2019.modelexp.exputils import ModelSample, anchor_samples_to_model_samples, model_samples_from_json
 import logging
-from utils import datautils, utils
+from IFETEL2019.utils import datautils, utils
 
 
 def __get_l2_person_type_ids(type_vocab):

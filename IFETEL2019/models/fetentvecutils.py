@@ -1,7 +1,7 @@
 import numpy as np
 import random
 import logging
-from utils import datautils
+from IFETEL2019.utils import datautils
 
 
 class FETEntityVec:
