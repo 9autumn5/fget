@@ -35,7 +35,7 @@ def __get_entity_vecs_for_mentions(el_entityvec: ELDirectEntityVec, mentions, no
     all_el_sgns = np.zeros(len(mentions), np.float32)
     all_probs = np.zeros(len(mentions), np.float32)
     mention_id_to_idxs = {m['mention_id']: i for i, m in enumerate(mentions)}
-    doc_mentions_dict = utils.json_objs_to_kvlistdict(mentions, 'file_id')
+    doc_mentions_dict = utils.json_objs_to_kvlistdict(mentions, 'file_id') # file_id:16
     for doc_id, doc_mentions in doc_mentions_dict.items():
         prev_pred_labels = [noel_pred_results[m['mention_id']] for m in doc_mentions]
         mstrs = [m['str'] for m in doc_mentions]
@@ -73,11 +73,13 @@ def train_fetel(device, gres: exputils.GlobalRes, el_entityvec: ELDirectEntityVe
     if device.type == 'cuda':
         model = model.cuda(device.index)
 
-    train_samples = datautils.load_pickle_data(train_samples_pkl)
-
-    dev_samples = datautils.load_pickle_data(dev_samples_pkl)
+    train_samples = datautils.load_pickle_data(train_samples_pkl)#(4932861,7)
+    # mention_id, mention_str, pos_beg, pos_end, target_wid, type_ids, sent_token_ids
+    dev_samples = datautils.load_pickle_data(dev_samples_pkl)  #(2000, 7)
+    #mention_token_id=3
+    # parent_type_ids_dict={0: [], 1: [54], 2: [], 3: [63], 4: [],......           128
     dev_samples = anchor_samples_to_model_samples(dev_samples, gres.mention_token_id, gres.parent_type_ids_dict)
-
+    # mention_id, mention_str, mstr_token_seq, context_token_seq, mention_token_idx, labels
     lr_gamma = 0.7
     eval_batch_size = 32
     logging.info('{}'.format(model.__class__.__name__))
@@ -86,10 +88,10 @@ def train_fetel(device, gres: exputils.GlobalRes, el_entityvec: ELDirectEntityVe
 
     test_samples = model_samples_from_json(gres.token_id_dict, gres.unknown_token_id, gres.mention_token_id,
                                            gres.type_id_dict, test_mentions_file, test_sents_file)
-    test_noel_pred_results = datautils.read_pred_results_file(test_noel_preds_file)
-
+    test_noel_pred_results = datautils.read_pred_results_file(test_noel_preds_file) # test_true_labels_dict
+    # mention,labels
     test_mentions = datautils.read_json_objs(test_mentions_file)
-    test_entity_vecs, test_el_sgns, test_el_probs = __get_entity_vecs_for_mentions(
+    test_entity_vecs, test_el_sgns, test_el_probs = __get_entity_vecs_for_mentions( # 因为测试的时候已经知道实体提及和标签了
         el_entityvec, test_mentions, test_noel_pred_results, gres.n_types)
 
     test_true_labels_dict = {m['mention_id']: m['labels'] for m in test_mentions} if (
@@ -98,7 +100,9 @@ def train_fetel(device, gres: exputils.GlobalRes, el_entityvec: ELDirectEntityVe
     person_type_id = gres.type_id_dict.get('/person')
     l2_person_type_ids, person_loss_vec = None, None
     if person_type_id is not None:
+        #[1, 21, 22, 24, 27, 28, 56, 76, 84, 95, 110, 119, 121, 125, 127]
         l2_person_type_ids = __get_l2_person_type_ids(gres.type_vocab)
+        # Lambda 值，用来计算loss
         person_loss_vec = exputils.get_person_type_loss_vec(
             l2_person_type_ids, gres.n_types, per_penalty, model.device)
 
@@ -117,6 +121,8 @@ def train_fetel(device, gres: exputils.GlobalRes, el_entityvec: ELDirectEntityVe
         batch_beg, batch_end = batch_idx * batch_size, min((batch_idx + 1) * batch_size, len(train_samples))
         batch_samples = anchor_samples_to_model_samples(
             train_samples[batch_beg:batch_end], gres.mention_token_id, gres.parent_type_ids_dict)
+        # 训练的时候才添加person   ,entity_vecs返回的是KB type represention
+        # 训练的时候需要 only output the types
         if rand_per:
             entity_vecs, el_sgns, el_probs = __get_entity_vecs_for_samples(
                 el_entityvec, batch_samples, None, True, person_type_id, l2_person_type_ids, gres.type_vocab)
@@ -126,10 +132,11 @@ def train_fetel(device, gres: exputils.GlobalRes, el_entityvec: ELDirectEntityVe
         use_entity_vecs = True
         model.train()
 
+        # context_token_seqs, mention_token_idxs, mstrs, mstr_token_seqs, y_true
         (context_token_seqs, mention_token_idxs, mstrs, mstr_token_seqs, y_true
          ) = exputils.get_mstr_cxt_label_batch_input(model.device, gres.n_types, batch_samples)
 
-        if use_entity_vecs:
+        if use_entity_vecs:# 训练的时候随机设置 EL 结果为NIL 0
             for i in range(entity_vecs.shape[0]):
                 if np.random.uniform() < nil_rate:
                     entity_vecs[i] = np.zeros(entity_vecs.shape[1], np.float32)
@@ -138,6 +145,8 @@ def train_fetel(device, gres: exputils.GlobalRes, el_entityvec: ELDirectEntityVe
         else:
             entity_vecs = None
         logits = model(context_token_seqs, mention_token_idxs, mstr_token_seqs, entity_vecs, el_probs)
+
+        # logits= s(m,t)
         loss = model.get_loss(y_true, logits, person_loss_vec=person_loss_vec)
         scheduler.step()
         optimizer.zero_grad()

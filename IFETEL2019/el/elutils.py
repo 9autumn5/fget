@@ -13,7 +13,7 @@ def get_mstr_targets(data: MStrTargetCntBisectData, mstr):
         return None
 
     beg_pos, end_pos = data.beg_positions[mstr_idx], data.end_positions[mstr_idx]
-    return data.wids[beg_pos:end_pos], data.cnts[beg_pos: end_pos]
+    return data.wids[beg_pos:end_pos], data.cnts[beg_pos: end_pos] # 40949287,195
 
 
 def get_redirected_wid(data: RedirectsBisectData, title):

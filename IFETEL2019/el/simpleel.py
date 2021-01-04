@@ -18,14 +18,14 @@ class SimpleEL:
         self.title_wid_bisect_data = title_wid_bisect_data
         self.redirects_bisect_data = redirects_bisect_data
         self.mstr_target_cnt_bisect_data = mstr_target_cnt_bisect_data
-        self.wiki_id_mid_dict = wiki_id_mid_dict
+        self.wiki_id_mid_dict = wiki_id_mid_dict  #None
         self.entry_linked_cnts_dict = entry_linked_cnts_dict if (
                 entry_linked_cnts_dict is not None) else get_linked_cnts(self.mstr_target_cnt_bisect_data)
 
     @staticmethod
     def init_from_candidiate_gen_pkl(pkl_file):
         import pickle
-
+        
         with open(pkl_file, 'rb') as f:
             (mstr_target_cnt_bisect_data, title_wid_bisect_data, redirects_bisect_data, entity_linked_cnts_dict
              ) = pickle.load(f)
@@ -38,12 +38,12 @@ class SimpleEL:
         mstr = mstr.replace(' \'s', '\'s')
 
         candidates = list()
-        tmp = elutils.get_mstr_targets(self.mstr_target_cnt_bisect_data, mstr)
+        tmp = elutils.get_mstr_targets(self.mstr_target_cnt_bisect_data, mstr) ## 40949287,195
         if tmp is not None:
             wids, cnts = tmp
             for wid, cnt in zip(wids, cnts):
                 popularity = self.entry_linked_cnts_dict.get(wid, 0)
-                candidates.append((wid, cnt, popularity))
+                candidates.append((wid, cnt, popularity)) # 40949287,195,390
                 if len(candidates) == max_num_candidates:
                     break
 
@@ -53,14 +53,14 @@ class SimpleEL:
             else:
                 mstr = mstr[0].upper() + mstr[1:]
 
-        redirected_wid = elutils.get_redirected_wid(self.redirects_bisect_data, mstr)
+        redirected_wid = elutils.get_redirected_wid(self.redirects_bisect_data, mstr)#None
         if redirected_wid is not None:
             wid_direct = redirected_wid
             title_match_weight = 0
         else:
-            wid_direct = elutils.get_wid_by_title(self.title_wid_bisect_data, mstr)
+            wid_direct = elutils.get_wid_by_title(self.title_wid_bisect_data, mstr) # 40949287
 
-        mid = self.wiki_id_mid_dict.get(wid_direct, None) if (
+        mid = self.wiki_id_mid_dict.get(wid_direct, None) if (  #None  wiki_id_mid_dict None
                 wid_direct and self.wiki_id_mid_dict is not None) else None
 
         if (mid or self.wiki_id_mid_dict is None) and wid_direct is not None:
@@ -78,7 +78,7 @@ class SimpleEL:
         return candidates
 
     def link_all(self, mstrs, preds, max_num_candidates=30):
-        if preds is None:
+        if preds is None: # 在训练验证的时候preds为空，直接only output the types
             return [self.link(mstr, max_num_candidates=max_num_candidates) for mstr in mstrs]
         candidates_list = list()
         i = 0

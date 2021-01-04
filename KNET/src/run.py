@@ -45,21 +45,21 @@ check_freq = 1000
 
 ####### load data
 util.printlog("Loading data")
-embedding = np.load(datadir+'/embedding.npy')
+embedding = np.load(datadir+'/embedding.npy')  #14951,100
 
 if training:
 
-    train_entity = np.load(datadir+'/train_entity.npy')
-    train_context = np.load(datadir+'/train_context.npy')
-    train_label = np.load(datadir+'/train_label.npy')
-    train_fbid = np.load(datadir+'/train_fbid.npy')
+    train_entity = np.load(datadir+'/train_entity.npy')# 1 000,000
+    train_context = np.load(datadir+'/train_context.npy')# 1 000,000 , 30
+    train_label = np.load(datadir+'/train_label.npy')# 1 000,000  ,74
+    train_fbid = np.load(datadir+'/train_fbid.npy')# 1 000,000
 
-    valid_entity = np.load(datadir+'/valid_entity.npy')
+    valid_entity = np.load(datadir+'/valid_entity.npy')# 1 000,00
     valid_context = np.load(datadir+'/valid_context.npy')
     valid_label = np.load(datadir+'/valid_label.npy')
     valid_fbid = np.load(datadir+'/valid_fbid.npy')
 
-    linkvalid = np.load(datadir+'/linkvalid.npy')
+    linkvalid = np.load(datadir+'/linkvalid.npy')  # 1 000,00
 
     train_size = len(train_entity)
 

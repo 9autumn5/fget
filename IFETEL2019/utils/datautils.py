@@ -15,7 +15,7 @@ def parse_typed_mention_file_line(line):
 
 
 def load_wid_types_file(filename, type_to_id_dict=None):
-    wid_types_dict = dict()
+    wid_types_dict = dict()  # {42213667: [123], 41529999: [54], 42268265: [54]}
     with open(filename, encoding='utf-8') as f:
         for line in f:
             x = json.loads(line)

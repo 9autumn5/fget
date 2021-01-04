@@ -1,5 +1,6 @@
 #!/bin/sh
 
+#shimaoka shimaoka shimaoka shimaoka shimaoka
 echo "Downloading corpus"
 wget http://www.cl.ecei.tohoku.ac.jp/~shimaoka/corpus.zip
 unzip corpus.zip

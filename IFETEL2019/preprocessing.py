@@ -13,7 +13,7 @@ def gen_training_data_from_wiki(typed_mentions_file, sents_file, word_vecs_pkl, 
         df = datautils.load_csv(core_title_wid_file)
         core_wids = {wid for _, wid in df.itertuples(False, None)}
 
-    token_vocab, token_vecs = datautils.load_pickle_data(word_vecs_pkl)
+    token_vocab, token_vecs = datautils.load_pickle_data(word_vecs_pkl)#(11077772,300)和(2200000 300)不一样
     token_id_dict = {t: i for i, t in enumerate(token_vocab)}
     unknown_token_id = token_id_dict[config.TOKEN_UNK]
 
@@ -31,7 +31,7 @@ def gen_training_data_from_wiki(typed_mentions_file, sents_file, word_vecs_pkl, 
         v = np.random.uniform()
         if v > sample_rate:
             continue
-
+        # line=12	Robespierre	11	12	13	23860776
         (wid, mention_str, sent_id, pos_beg, pos_end, target_wid, type_ids
          ) = datautils.parse_typed_mention_file_line(line)
         if core_wids is not None and target_wid not in core_wids:

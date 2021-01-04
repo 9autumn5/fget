@@ -115,19 +115,19 @@ class FETELStack(BaseResModel):
                                          context_lstm_hidden_dim, type_embed_dim, dropout, concat_lstm)
         self.use_mlp = use_mlp
         # self.dropout_layer = nn.Dropout(dropout)
-
-        linear_map_input_dim = 2 * self.context_lstm_hidden_dim + self.word_vec_dim + self.n_types + 1
+        # 929=500+300+128+1
+        linear_map_input_dim = 2 * self.context_lstm_hidden_dim + self.word_vec_dim + self.n_types + 1 #929  //464
         if concat_lstm:
             linear_map_input_dim += 2 * self.context_lstm_hidden_dim
         if not self.use_mlp:
             self.linear_map = nn.Linear(linear_map_input_dim, type_embed_dim, bias=False)
         else:
             mlp_hidden_dim = linear_map_input_dim // 2 if mlp_hidden_dim is None else mlp_hidden_dim
-            self.linear_map1 = nn.Linear(linear_map_input_dim, mlp_hidden_dim)
-            self.lin1_bn = nn.BatchNorm1d(mlp_hidden_dim)
+            self.linear_map1 = nn.Linear(linear_map_input_dim, mlp_hidden_dim) #929,500
+            self.lin1_bn = nn.BatchNorm1d(mlp_hidden_dim) #500
             self.linear_map2 = nn.Linear(mlp_hidden_dim, mlp_hidden_dim)
             self.lin2_bn = nn.BatchNorm1d(mlp_hidden_dim)
-            self.linear_map3 = nn.Linear(mlp_hidden_dim, type_embed_dim)
+            self.linear_map3 = nn.Linear(mlp_hidden_dim, type_embed_dim)#(500,500)
 
     def forward(self, context_token_seqs, mention_token_idxs, mstr_token_seqs, entity_vecs, el_probs):
         batch_size = len(context_token_seqs)
@@ -150,7 +150,7 @@ class FETELStack(BaseResModel):
             l2_output = self.linear_map2(self.dropout_layer(l1_output))
             l2_output = self.lin2_bn(F.relu(l2_output))
             mention_reps = self.linear_map3(self.dropout_layer(l2_output))
-
+        # logits= s(m,t)
         logits = torch.matmul(mention_reps.view(-1, 1, self.type_embed_dim),
                               self.type_embeddings.view(-1, self.type_embed_dim, self.n_types))
         logits = logits.view(-1, self.n_types)

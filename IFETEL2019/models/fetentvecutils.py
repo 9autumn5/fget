@@ -35,9 +35,9 @@ class ELDirectEntityVec:
             types = self.wid_types_dict.get(wid, None)
             if types is None:
                 continue
-
+            # 695/695+  主要分母是sum
             probs[i] = mstr_target_cnt / (sum([cand[1] for cand in el_candidates]) + 1e-7)
-            el_sgns[i] = 1
+            el_sgns[i] = 1   #为0 的时候是continue
             for type_id in types:
                 all_entity_vecs[i][type_id] = 1
 

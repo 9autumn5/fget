@@ -44,7 +44,7 @@ def init_lstm_hidden(device, batch_size, hidden_dim, bidirectional):
 
 
 def build_hierarchy_vecs(type_vocab, type_to_id_dict):
-    from utils import utils
+    from IFETEL2019.utils import utils
 
     n_types = len(type_vocab)
     l1_type_vec = np.zeros(n_types, np.float32)

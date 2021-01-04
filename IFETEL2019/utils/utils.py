@@ -35,6 +35,12 @@ def get_full_type_ids(type_ids, parent_type_ids_dict):
 
 
 def json_objs_to_kvlistdict(objs, key_str):
+    '''
+
+    :param objs:
+    :param key_str:
+    :return: test-mentions 的file_id字典，大小为16，说明是16篇document，每篇文章含有多个mentions
+    '''
     d = dict()
     for x in objs:
         cur_key = x[key_str]

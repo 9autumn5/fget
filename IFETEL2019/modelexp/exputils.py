@@ -15,7 +15,8 @@ class ModelSample:
         self.mstr_token_seq = mstr_token_seq
         self.context_token_seq = context_token_seq
         self.mention_token_idx = mention_token_idx
-
+    #(1, 'Jean-Jacques Rousseau', 14, 16, 15941, [76, 110],
+    # [3470, 76229, 38896, 30, 6, 14084, 33, 2611, 397, 9, 6, 27070, 4, 1693, 93895, 48301, 21, 6037, 14, 6, 4948, 83262, 9, 2765, 5])
 
 class LabeledModelSample(ModelSample):
     def __init__(self, mention_id, mention_str, mstr_token_seq, context_token_seq, mention_token_idx, labels):
